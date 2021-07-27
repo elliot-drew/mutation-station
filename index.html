@@ -1,14 +1,189 @@
 <html>
     <head>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+        <!-- Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+        <!-- Bootstrap core CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Material Design Bootstrap -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+        <!-- JQuery -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Bootstrap tooltips -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+        <!-- Bootstrap core JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <!-- MDB core JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
 
+        <style>
+            
+            .aabutton {
+                padding:.375rem .75rem;
+                margin:0;
+            }
+
+            .btn-primary:not([disabled]):not(.disabled).active {
+                background-color: #b50d9b !important;
+            }
+        </style>
     </head>
     <body>
-        <div id="intro">
-            <h2>Test</h2>
+        <!-- Modal -->
+        <div class="modal fade" id="wipModal" tabindex="-1" role="dialog" aria-labelledby="wipModalLabel"
+        aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="wipModalLabel">Hi!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        This is very much a work in progress, so nothing is working quite yet.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="">
-            <input type="text" name="seqin" id="seqin">
-            <label for="seqin">Enter Sequence</label>
+        <nav class="navbar navbar-dark primary-color">
+            <a class="navbar-brand" href="https://github.com/elliot-drew/mutation-station">elliot-drew@github</a>
+        </nav>
+          <br>
+        <div class="container" id="intro">
+            <div class="row">
+                <div class="col">
+                
+                    <h2>Mutation Station</h2>
+                    <h6>
+                        Produce mutation inputs for a variety of computational mutagenesis
+                        tools from a protein sequence.
+                        <br><br>
+                        <ol>
+                            <li>Select a residue, a residue range, residue types to mutate or residue types to
+                        mutate to.</li>
+
+                            <li>Pick the tool/website you want to generate input for.</li>
+
+                            <li>Click Generate!</li>
+                        </ol>
+                        Copy the text produced, or click Download to get a text file containing the
+                        generated input.
+                    </h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <hr>
+                    <span style="margin-right:30px">Amino acids to mutate to:</span>
+                    <span id="amino-buttons">
+                        <button id="g-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            G
+                        </button>
+                        <button id="p-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            P
+                        </button>
+                        <button id="c-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            C
+                        </button>
+                        <button id="a-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            A
+                        </button>
+                        <button id="i-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            I
+                        </button>
+                        <button id="l-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            L
+                        </button>
+                        <button id="m-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            M
+                        </button>
+                        <button id="v-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            V
+                        </button>
+                        <button id="f-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            F
+                        </button>
+                        <button id="w-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            W
+                        </button>
+                        <button id="y-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            Y
+                        </button>
+                        <button id="s-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            S
+                        </button>
+                        <button id="t-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            T
+                        </button>
+                        <button id="n-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            N
+                        </button>
+                        <button id="q-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            Q
+                        </button>
+                        <button id="r-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            R
+                        </button>
+                        <button id="k-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            K
+                        </button>
+                        <button id="h-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            H
+                        </button>
+                        <button id="d-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            D
+                        </button>
+                        <button id="e-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
+                            E
+                        </button>
+                    </span>
+                    <br>
+                    <br>
+                    
+                    <div class="md-form mb-4 pink-textarea active-pink-textarea">
+                        <textarea id="resnums" class="md-textarea form-control" rows="1"></textarea>
+                        <label for="resnums">Residue Numbers</label>
+                    </div>
+                    
+                    
+                    <div class="md-form mb-4 pink-textarea active-pink-textarea">
+                        <textarea id="seqin" class="md-textarea form-control" rows="1"></textarea>
+                        <label for="seqin">Enter Sequence</label>
+                    </div>
+                    <button id="generatebutt" type="button" class="btn btn-primary">Generate</button>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h5>Result</h5>
+                    <div id="result">
+                        <textarea id="result-text" class="form-control rounded-0" rows="10"></textarea>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            
         </div>
+        <!-- Footer -->
+        <footer class="page-footer font-small blue">
+
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">© 2020 Elliot Drew
+            
+            </div>
+            <!-- Copyright -->
+        
+        </footer>
+        <!-- Footer -->
+        <script>
+            $('#wipModal').modal('show')
+        </script>
     </body>
 </html>
