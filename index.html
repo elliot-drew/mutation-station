@@ -1,5 +1,6 @@
 <html>
     <head>
+        <title>Mutation Station</title>
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
         <!-- Google Fonts -->
@@ -20,12 +21,23 @@
         <style>
             
             .aabutton {
-                padding:.375rem .75rem;
-                margin:0;
+                padding:.375rem .75rem .375rem .75rem;
+                margin: 0.375rem 0 0.375rem;
             }
 
             .btn-primary:not([disabled]):not(.disabled).active {
-                background-color: #b50d9b !important;
+                background-color: #97bbe9 !important;
+                -webkit-box-shadow: none !important;
+                box-shadow: none !important;
+            }
+
+            .orClass {
+                line-height: 4rem;
+                font-weight: bold;
+            }
+
+            .error {
+                color:red;
             }
         </style>
     </head>
@@ -61,12 +73,16 @@
                 
                     <h2>Mutation Station</h2>
                     <h6>
-                        Produce mutation inputs for a variety of computational mutagenesis
-                        tools from a protein sequence.
+                        Prepare inputs for a variety of computational mutagenesis
+                        tools from a protein sequence or a PDB file.
                         <br><br>
                         <ol>
-                            <li>Select a residue, a residue range, residue types to mutate or residue types to
+                            <li>Select a residue, a residue range, and residue types to
                         mutate to.</li>
+
+                            <li>If you are using a PDB file, the chain is required.</li>
+
+                            <li>Enter sequence or upload PDB file.</li>
 
                             <li>Pick the tool/website you want to generate input for.</li>
 
@@ -75,12 +91,50 @@
                         Copy the text produced, or click Download to get a text file containing the
                         generated input.
                     </h6>
+                    <hr>
                 </div>
             </div>
             <div class="row">
-                <div class="col">
-                    <hr>
-                    <span style="margin-right:30px">Amino acids to mutate to:</span>
+                <div class="col-lg-2">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="PolyPhen2" name="toolRadios" checked>
+                        <label class="custom-control-label" for="PolyPhen2">PolyPhen2</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="SIFT" name="toolRadios" checked>
+                        <label class="custom-control-label" for="SIFT">SIFT</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="DeepDDG" name="toolRadios">
+                        <label class="custom-control-label" for="DeepDDG">DeepDDG</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="FoldX" name="toolRadios">
+                        <label class="custom-control-label" for="FoldX">FoldX</label>
+                    </div>
+                    <div class="custom-control custom-radio">    
+                        <input type="radio" class="custom-control-input" id="Dynamut" name="toolRadios">
+                        <label class="custom-control-label" for="Dynamut">Dynamut</label>
+                    </div>
+                    <div class="custom-control custom-radio">    
+                        <input type="radio" class="custom-control-input" id="SDM2" name="toolRadios">
+                        <label class="custom-control-label" for="SDM2">SDM2</label>
+                    </div>
+                    <br>
+                    <div class="custom-control custom-radio">    
+                        <input type="radio" class="custom-control-input" id="seqRad" name="modeRadios" checked>
+                        <label class="custom-control-label" for="seqRad">Sequence</label>
+                    </div>
+                    <div class="custom-control custom-radio">    
+                        <input type="radio" class="custom-control-input" id="pdbRad" name="modeRadios">
+                        <label class="custom-control-label" for="pdbRad">PDB file</label>
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-lg-10">
+                    
+                    
                     <span id="amino-buttons">
                         <button id="g-butt" type="button" class="btn btn-primary aabutton" data-toggle="button" aria-pressed="false" autocomplete="off">
                             G
@@ -145,29 +199,65 @@
                     </span>
                     <br>
                     <br>
-                    
-                    <div class="md-form mb-4 pink-textarea active-pink-textarea">
-                        <textarea id="resnums" class="md-textarea form-control" rows="1"></textarea>
-                        <label for="resnums">Residue Numbers</label>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="md-form mb-4 pink-textarea active-pink-textarea">
+                                <input type="text" id="resnums" class="md-textarea form-control">
+                                <label for="resnums" id="resnums-label">Residue Numbers</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="md-form mb-4 pink-textarea active-pink-textarea">
+                                <input type="text" id="chainid" class="md-textarea form-control">
+                                <label for="chainid" id="chainid-label">Chain ID (for PDB)</label>
+                            </div>
+                        </div>
                     </div>
-                    
-                    
-                    <div class="md-form mb-4 pink-textarea active-pink-textarea">
-                        <textarea id="seqin" class="md-textarea form-control" rows="1"></textarea>
-                        <label for="seqin">Enter Sequence</label>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="md-form mb-4 pink-textarea active-pink-textarea">
+                                <textarea id="seqin" class="md-textarea form-control" rows="1"></textarea>
+                                <label for="seqin" id="seqin-label" >Enter Sequence</label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4">
+                            <br>
+                            <div class="input-group">
+                                
+                                <div class="custom-file">
+                                  <input type="file" class="custom-file-input" id="pdbbutt" accept=".pdb">
+                                  <label class="custom-file-label" for="pdbbutt">Choose PDB file</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button id="generatebutt" type="button" class="btn btn-primary">Generate</button>
-                    <hr>
+                </div>
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    
+                        <button id="generatebutt" type="button" class="btn btn-danger">Generate</button>
+                        <button id="downloadbutt" type="button" class="btn btn-primary">Download</button>
+                    
+                </div>
+                <div class="col-lg-8">
+                    <span id="errorbox" class="error"></span>
                 </div>
             </div>
+            <hr>
             <div class="row">
                 <div class="col">
                     <h5>Result</h5>
                     <div id="result">
-                        <textarea id="result-text" class="form-control rounded-0" rows="10"></textarea>
+                        <textarea id="result-text" class="form-control rounded-0" rows="5"></textarea>
                     </div>
+                    
                     <br>
                 </div>
+               
             </div>
             
         </div>
@@ -183,7 +273,678 @@
         </footer>
         <!-- Footer -->
         <script>
-            $('#wipModal').modal('show')
+            //$('#wipModal').modal('show')
+
+            // set up some intial variables and a state object to keep things neat
+
+            const methods=["PolyPhen2", "SIFT", "DeepDDG", "FoldX", "Dynamut", "SDM2"]
+            const modes=["seq", "pdb"]
+
+            const validated={
+                "resnums":true, // doesnt check whether within range - just that it makes sense
+                "chain":true, // only check if mode is pdb
+                "data":true,
+            }
+
+            const one2three={
+                "G": "GLY",
+                "P": "PRO",
+                "C": "CYS",
+                "A": "ALA",
+                "I": "ILE",
+                "L": "LEU",
+                "M": "MET",
+                "V": "VAL",
+                "F": "PHE",
+                "W": "TRP",
+                "Y": "TYR",
+                "S": "SER",
+                "T": "THR",
+                "N": "ASN",
+                "Q": "GLN",
+                "R": "ARG",
+                "K": "LYS",
+                "H": "HIS",
+                "D": "ASP",
+                "E": "GLU",
+            }
+
+            const three2one={
+                "GLY":"G",
+                "PRO":"P",
+                "CYS":"C",
+                "ALA":"A",
+                "ILE":"I",
+                "LEU":"L",
+                "MET":"M",
+                "VAL":"V",
+                "PHE":"F",
+                "TRP":"W",
+                "TYR":"Y",
+                "SER":"S",
+                "THR":"T",
+                "ASN":"N",
+                "GLN":"Q",
+                "ARG":"R",
+                "LYS":"K",
+                "HIS":"H",
+                "ASP":"D",
+                "GLU":"E",
+            }
+
+            const state={
+                "mode":"seq",
+                "method":"PolyPhen2",
+                "resnums":[],
+                "chain":"",
+                "aas":{
+                    "g": true,
+                    "p": true,
+                    "c": true,
+                    "a": true,
+                    "i": true,
+                    "l": true,
+                    "m": true,
+                    "v": true,
+                    "f": true,
+                    "w": true,
+                    "y": true,
+                    "s": true,
+                    "t": true,
+                    "n": true,
+                    "q": true,
+                    "r": true,
+                    "k": true,
+                    "h": true,
+                    "d": true,
+                    "e": true,
+                },
+                "pdbdata":{},
+                "seq":{},
+                "currentResult":"",
+            }
+
+            const aas=["g","p","c","a","i","l","m","v","f","w","y","s","t","n","q","r","k","h","d","e"]
+
+            const errorBox=document.getElementById("errorbox");
+            
+            // some functions
+
+            function download(filename, text) {
+                let element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+                element.setAttribute('download', filename);
+
+                element.style.display = 'none';
+                document.body.appendChild(element);
+
+                element.click();
+
+                document.body.removeChild(element);
+            }
+
+
+            function polyphen2(state){
+                let chain;
+                let seq;
+                let uniqid;
+                if(state.mode=="seq"){
+                    chain="A"
+                    seq=state.seq;
+                    uniqid="mutationStation"
+                }else{
+                    chain=state.chain;
+                    seq=state.pdbdata[chain];
+                    uniqid="mutationStation_"+state.pdbdata.name+"_"+state.chain;
+                }
+                
+                let resnums=state.resnums;
+                if(resnums.length==0){
+                    resnums=Object.keys(seq);
+                }
+                let text="";
+                
+                
+
+                let subaas=[];
+                for(let i=0;i<aas.length;i++){
+                    if(state.aas[aas[i]]){
+                        subaas.push(aas[i].toUpperCase());
+                    }
+                }
+                if(subaas.length==0){
+                    errorBox.innerHTML=("no aa types selected");
+                    return(false)
+                }
+
+                for(let i=0;i<resnums.length;i++){
+                    for(let j=0;j<subaas.length;j++){
+                        text+=uniqid+" "+resnums[i]+" "+seq[resnums[i]]+" "+subaas[j]+"\n";
+                    }
+                }
+                return(text);
+            }
+
+            function sift(state){
+                let chain;
+                let seq;
+                let uniqid;
+                if(state.mode=="seq"){
+                    chain="A"
+                    seq=state.seq;
+                    uniqid="mutationStation"
+                }else{
+                    chain=state.chain;
+                    seq=state.pdbdata[chain];
+                    uniqid="mutationStation_"+state.pdbdata.name+"_"+state.chain;
+                }
+                
+                let resnums=state.resnums;
+                if(resnums.length==0){
+                    resnums=Object.keys(seq);
+                }
+                let text="";
+                
+                
+
+                let subaas=[];
+                for(let i=0;i<aas.length;i++){
+                    if(state.aas[aas[i]]){
+                        subaas.push(aas[i].toUpperCase());
+                    }
+                }
+                if(subaas.length==0){
+                    errorBox.innerHTML=("no aa types selected");
+                    return(false)
+                }
+
+                for(let i=0;i<resnums.length;i++){
+                    for(let j=0;j<subaas.length;j++){
+                        text+=seq[resnums[i]]+resnums[i]+subaas[j]+"\n";
+                    }
+                }
+                return(text);
+            }
+
+            function ddg(state){
+                let chain;
+                let seq;
+                let uniqid;
+                if(state.mode=="seq"){
+                    chain="A"
+                    seq=state.seq;
+                    uniqid="mutationStation"
+                }else{
+                    chain=state.chain;
+                    seq=state.pdbdata[chain];
+                    uniqid="mutationStation_"+state.pdbdata.name+"_"+state.chain;
+                }
+                
+                let resnums=state.resnums;
+                if(resnums.length==0){
+                    resnums=Object.keys(seq);
+                }
+                let text="";
+                
+                
+
+                let subaas=[];
+                for(let i=0;i<aas.length;i++){
+                    if(state.aas[aas[i]]){
+                        subaas.push(aas[i].toUpperCase());
+                    }
+                }
+                if(subaas.length==0){
+                    errorBox.innerHTML=("no aa types selected");
+                    return(false)
+                }
+
+                for(let i=0;i<resnums.length;i++){
+                    for(let j=0;j<subaas.length;j++){
+                        text+=chain+" "+seq[resnums[i]]+" "+resnums[i]+" "+subaas[j]+"\n";
+                    }
+                }
+                return(text);
+            }
+
+            function foldx(state){
+                let chain;
+                let seq;
+                let uniqid;
+                let text="command=PositionScan\n";
+                
+                
+                
+                if(state.mode=="seq"){
+                    chain="A"
+                    seq=state.seq;
+                    uniqid="mutationStation"
+                    text+="pdb=REPLACE WITH YOUR FILE NAME\n"
+                }else{
+                    chain=state.chain;
+                    seq=state.pdbdata[chain];
+                    uniqid="mutationStation_"+state.pdbdata.name+"_"+state.chain;
+                    text+="pdb="+state.pdbdata.name+"\n"
+                }
+                
+                let resnums=state.resnums;
+                if(resnums.length==0){
+                    resnums=Object.keys(seq);
+                }
+                
+                
+
+                let subaas=[];
+                for(let i=0;i<aas.length;i++){
+                    if(state.aas[aas[i]]){
+                        subaas.push(aas[i].toUpperCase());
+                    }
+                }
+                if(subaas.length==0){
+                    errorBox.innerHTML=("no aa types selected");
+                    return(false)
+                }
+
+                text+="positions=";
+                for(let i=0;i<resnums.length;i++){
+                    for(let j=0;j<subaas.length;j++){
+                        text+=seq[resnums[i]]+chain+resnums[i]+subaas[j]+",";
+                    }
+                }
+                return(text);
+            }
+
+            function sdm2(state){
+                let chain;
+                let seq;
+                let uniqid;
+                if(state.mode=="seq"){
+                    chain="A"
+                    seq=state.seq;
+                    uniqid="mutationStation"
+                }else{
+                    chain=state.chain;
+                    seq=state.pdbdata[chain];
+                    uniqid="mutationStation_"+state.pdbdata.name+"_"+state.chain;
+                }
+                
+                let resnums=state.resnums;
+                if(resnums.length==0){
+                    resnums=Object.keys(seq);
+                }
+                let text="";
+                
+                
+
+                let subaas=[];
+                for(let i=0;i<aas.length;i++){
+                    if(state.aas[aas[i]]){
+                        subaas.push(aas[i].toUpperCase());
+                    }
+                }
+                if(subaas.length==0){
+                    errorBox.innerHTML=("no aa types selected");
+                    return(false)
+                }
+
+                for(let i=0;i<resnums.length;i++){
+                    for(let j=0;j<subaas.length;j++){
+                        text+=chain+" "+seq[resnums[i]]+resnums[i]+subaas[j]+"\n";
+                    }
+                }
+                return(text);
+            }
+
+            function generate(state, validated){
+                if(validated.resnums && validated.chain && validated.data){
+                    if(state.mode=="seq"){
+                        /// some more validation
+                        if(Object.keys(state.seq).length==0){
+                            errorBox.innerHTML=("No sequence submitted.");
+                            return(false)
+                        }
+                        let outOfRange=false;
+                        for(let i=0;i<state.resnums.length;i++){
+                            if(state.resnums[i] in state.seq==false){
+                                outOfRange=true;
+                            }
+                            
+                        }
+                        if(outOfRange){
+                            errorBox.innerHTML=("Residue/residues chosen out of range.");
+                            return(false);
+                        }else{
+                            errorBox.innerHTML=("")
+                            resultText="";
+                            switch(state.method){
+                                
+                                case("PolyPhen2"):
+                                    resultText=polyphen2(state);
+                                    break;
+                                case("SIFT"):
+                                    resultText=sift(state);
+                                    break;
+                                case("DeepDDG"):
+                                    resultText=ddg(state);
+                                    break;
+                                case("FoldX"):
+                                    resultText=foldx(state);
+                                    break;
+                                case("Dynamut"):
+                                    resultText=sift(state); //same format
+                                    break; 
+                                case("SDM2"):
+                                    resultText=sdm2(state);
+                                    break;   
+                                default:
+                                    return(false)
+                            }
+                            document.getElementById("result-text").value=resultText;
+                            state.currentResult=resultText;
+                            
+                        }
+                    }else if(state.mode=="pdb"){
+                        if(Object.keys(state.pdbdata).length==0){
+                            errorBox.innerHTML=("No PDB file uploaded.");
+                            return(false)
+                        }
+                        if(state.chain==""){
+                            errorBox.innerHTML=("No chain specified.");
+                            return(false)
+                        }
+                        if(state.chain in state.pdbdata){
+                            if(Object.keys(state.pdbdata[state.chain]).length==0){
+                                errorBox.innerHTML=("Chain in PDB has no residues - no sequence detected.");
+                                return(false)
+                            }
+                            
+                            let outOfRange=false;
+                            for(let i=0;i<state.resnums.length;i++){
+                                if(state.resnums[i] in state.pdbdata[state.chain]==false){
+                                    outOfRange=true;
+                                }
+                                
+                            }
+                            
+                            if(outOfRange){
+                                errorBox.innerHTML=("Residue/residues chosen out of range.");
+                                return(false);
+                            }else{
+                                errorBox.innerHTML=("")
+                                resultText="";
+                                switch(state.method){
+                                    
+                                    case("PolyPhen2"):
+                                        resultText=polyphen2(state);
+                                        break;
+                                    case("SIFT"):
+                                        resultText=sift(state);
+                                        break;
+                                    case("DeepDDG"):
+                                        resultText=ddg(state);
+                                        break;
+                                    case("FoldX"):
+                                        resultText=foldx(state);
+                                        break;
+                                    case("Dynamut"):
+                                        resultText=sift(state);
+                                        break; 
+                                    case("SDM2"):
+                                        resultText=sdm2(state);
+                                        break;   
+                                    default:
+                                        return(false)
+                                }
+                                document.getElementById("result-text").value=resultText;
+                                state.currentResult=resultText;
+                                
+                            }
+                        }else{
+                            errorBox.innerHTML=("Chain specified not present in PDB file.")
+                            return(false)
+                        }
+                    }
+                }else{
+                    
+                    return(false);
+                }
+                
+            }
+
+            
+            
+            
+            
+            // instantiate some GUI elements and events to change state vars
+
+            const methodRadios=[];
+            
+            for(let i=0;i<methods.length;i++){
+                let method=document.getElementById(methods[i]);
+                if(i==0){
+                    method.checked=true;
+                }else{
+                    method.checked=false;
+                }
+
+                method.addEventListener("click", function(e){
+                    let m = e.target.id;
+                    state.method=m;
+                })
+
+                methodRadios.push(method);
+            }
+
+            const modeRadios=[];
+
+            for(let i=0;i<modes.length;i++){
+                let mode=document.getElementById(modes[i]+"Rad");
+                if(i==0){
+                    mode.checked=true;
+                }else{
+                    mode.checked=false;
+                }
+                mode.addEventListener("click", function(e){
+                    let m = e.target.id;
+                    state.mode=m.slice(0,3);
+                })
+
+                modeRadios.push(mode);
+            }
+            
+            const aaToggles=[];
+
+            for(let i=0;i<aas.length;i++){
+                let togg=document.getElementById(aas[i]+"-butt");
+
+                togg.addEventListener("click", function(e){
+                    let aa=e.target.id.split("-")[0];
+                    state.aas[aa]=!state.aas[aa];
+                })
+
+                aaToggles.push(togg)
+            }
+
+            const resnumInput = document.getElementById("resnums");
+            const resnumInputLabel = document.getElementById("resnums-label");
+
+            resnumInput.value="";
+            
+            resnumInput.addEventListener("keyup", function(e){
+                let newresnum=e.target.value.trim();
+                let resids=[];
+                newresnum=newresnum.split(",")
+                if(newresnum.length>0){
+                    let notInt=true;
+                    for(let i=0;i<newresnum.length;i++){
+                        if(Number.isInteger(parseInt(newresnum[i]))==false){
+                            notInt=false;
+                            resnumInput.classList.add("error");
+                            resnumInputLabel.classList.add("error");
+                            validated.resnums=false;
+                        }else{
+                            resids.push(parseInt(newresnum[i]));   
+                        }
+                        if(notInt){
+                            
+                            resnumInput.classList.remove("error");
+                            resnumInputLabel.classList.remove("error");
+                            validated.resnums=true;
+                            state.resnums=resids;
+                        }
+                    }
+                }else{
+                    resnumInput.classList.remove("error");
+                    resnumInputLabel.classList.remove("error");
+                    state.resnums=[];
+                    validated.resnums=true;
+                }
+                
+            }); 
+
+            const seqInput = document.getElementById("seqin");
+            const seqInputLabel = document.getElementById("seqin-label");
+
+            seqInput.value="";
+            
+            seqInput.addEventListener("keyup", function(e){
+                let newseq=e.target.value.trim();
+                newseq=newseq.split("");
+                nogapSeq={};
+                let err=false;
+                for(let i=0;i<newseq.length;i++){
+                    
+                    if(aas.indexOf(newseq[i].toLowerCase())>=0){
+                        nogapSeq[i+1]=newseq[i].toUpperCase();
+                    }else if(newseq[i].trim()!=""){
+                        err=true
+                    }
+                    
+                }
+
+                if(err){
+                    seqInput.classList.add("error");
+                    seqInputLabel.classList.add("error");
+                    state.seq={}
+                    if(state.mode=="seq"){
+                        validated.data=false;
+                    }
+                    
+                }else{
+                    seqInput.classList.remove("error");
+                    seqInputLabel.classList.remove("error");
+                    state.seq=nogapSeq;
+                    if(state.mode=="seq"){
+                        validated.data=true;
+                    }
+                }
+            });
+            
+            const chainInput = document.getElementById("chainid");
+            const chainInputLabel = document.getElementById("chainid-label");
+
+            chainInput.value="";
+            
+            chainInput.addEventListener("keyup", function(e){
+                let c=e.target.value.trim();
+                c=c.toUpperCase();
+                let err=false;
+                
+                
+
+                if(c.length === 1 && c.match(/[A-Z]/i)){
+                    err=false;
+                }else{
+                    err=true;
+                }
+
+                if(err){
+                    chainInput.classList.add("error");
+                    chainInputLabel.classList.add("error");
+                    state.chain="";
+                    
+                    
+                }else{
+                    chainInput.classList.remove("error");
+                    chainInputLabel.classList.remove("error");
+                    state.chain=c;
+                    
+                }
+            }); 
+
+            document.getElementById("result-text").value=""
+
+            const pdbUpload=document.getElementById("pdbbutt");
+
+            pdbUpload.value="";
+
+            pdbUpload.addEventListener("change", function(e){
+                if(!window.FileReader) return; // Browser is not compatible
+                let name=e.target.files[0].name;
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    if(e.target.readyState != 2) return;
+                    if(e.target.error) {
+                        alert('Error while reading file');
+                        return;
+                    }
+
+                    
+
+                    let pdbtext = e.target.result;
+                    
+                    
+                    pdbtext=pdbtext.split("\n")
+
+                    pdbdata={"name":name};
+                    
+                    for(let i=0;i<pdbtext.length;i++){
+                        if(pdbtext[i].startsWith("ATOM")){
+                            
+                            let resn=pdbtext[i].slice(17,20);
+                            let resnum=parseInt(pdbtext[i].slice(22,26));
+                            let chain=pdbtext[i].slice(21,22);
+                            if(chain in pdbdata==false){
+                                currResnum=-9999999;
+                                pdbdata[chain]={};
+                            }
+                            if(resnum in pdbdata[chain]==false){
+                                if(resn in three2one){
+                                    pdbdata[chain][resnum]=three2one[resn];
+                                }else{
+                                    pdbdata[chain][resnum]="X";
+                                }
+                            }
+                            
+                        }
+                    }
+                    state.pdbdata=pdbdata;
+                };
+
+                var pdbtext=reader.readAsText(e.target.files[0]);
+                
+            })
+
+
+            document.getElementById("downloadbutt").addEventListener("click", function(e){
+                let text=document.getElementById("result-text").value;
+                let fn;
+                if(state.mode=="pdb"){
+                    fn="mutationstation_"+state.pdbdata.name+"_"+state.chain+"_"+state.method+".txt"
+                }else{
+                    fn="mutationstation_seq_"+state.method+".txt"
+                }
+                download(fn,text);
+            })
+
+            document.getElementById("generatebutt").addEventListener("click", function(){
+                errorBox.innerHTML="";
+                generate(state, validated);
+            })
+
+            
+            
         </script>
     </body>
 </html>
